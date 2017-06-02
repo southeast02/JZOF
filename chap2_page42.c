@@ -11,7 +11,7 @@ int duplicate(int data[], int length, int *duplication);
 void main(){
 	int data[N] = {1, 2, 3, 5, 4, 7, 8, 9, 6, 3};
 	int number;
-    //int flag = BinaryFindDuplicate(1, N-1, data, N, &number);
+        //int flag = BinaryFindDuplicate(1, N-1, data, N, &number);
 	int flag = duplicate(data, N, &number);
 
 	if(flag){
