@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+
 #define N 10
 
 int countRange(int start, int end, int data[], int length);
