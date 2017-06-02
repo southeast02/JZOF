@@ -38,8 +38,8 @@ int duplicate(int data[], int length, int *duplication){
 			data[i] = data[temp];
 			data[temp] = temp;
 			//int temp = data[i];
-            //data[i] = data[data[i]];
-            //data[data[i]] = temp; /* data[i] has been changed in last step*/
+                        //data[i] = data[data[i]];
+                        //data[data[i]] = temp; /* data[i] has been changed in last step*/
 		}
 	}
 	return 0;
