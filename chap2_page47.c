@@ -11,7 +11,7 @@ void main(){
 			{6, 8, 11, 15}
 	};
 	int number = 7;
-    //int flag = FindNumber(arr, 4, 4, number);
+        //int flag = FindNumber(arr, 4, 4, number);
 	int flag = FindNumberFromUpRight(arr, 4, 4, number);
 
 	if(flag){
