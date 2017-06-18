@@ -11,7 +11,7 @@ typedef struct Node{
 
 BinaryTree construct(char* preorder, char* inorder, int length);
 BinaryTree construct_core(char* start_preorder, char* end_preorder,
-		char* start_inorder, char* end_inorder);
+		          char* start_inorder, char* end_inorder);
 void show_binary_tree(BinaryTree root);
 void inorder_next_node(BinaryTree root, char value, BinaryTreeNode** next);
 BinaryTreeNode* get_next_node(BinaryTreeNode* node);
@@ -52,11 +52,11 @@ BinaryTree construct(char* preorder, char* inorder, int length){
 		return NULL;
 	}
 	return construct_core(preorder, preorder+length-1,
-						 inorder, inorder+length-1);
+			      inorder, inorder+length-1);
 }
 
 BinaryTree construct_core(char* start_preorder, char* end_preorder,
-		char* start_inorder, char* end_inorder){
+		          char* start_inorder, char* end_inorder){
 	int root_value = start_preorder[0];
 	BinaryTreeNode *root = (BinaryTreeNode *)malloc(sizeof(BinaryTreeNode));
 	root->value = root_value;
@@ -77,7 +77,7 @@ BinaryTree construct_core(char* start_preorder, char* end_preorder,
 
 	char* root_inorder = start_inorder;
 	while(root_inorder <= end_inorder &&
-		  *root_inorder != root_value){
+		*root_inorder != root_value){
 		root_inorder++;
 	}
 	if(root_inorder == end_inorder &&
@@ -89,12 +89,12 @@ BinaryTree construct_core(char* start_preorder, char* end_preorder,
 	char *left_preorderend = start_preorder + left_length;
 	if(left_length > 0){
 		root->left = construct_core(start_preorder+1, left_preorderend,
-				                    start_inorder, root_inorder-1);
+				            start_inorder, root_inorder-1);
 		root->left->parent = root;
 	}
 	if(left_length < end_preorder-start_preorder){
 		root->right = construct_core(left_preorderend+1, end_preorder,
-				                     root_inorder+1, end_inorder);
+				             root_inorder+1, end_inorder);
 		root->right->parent = root;
 	}
 	return root;
@@ -143,8 +143,8 @@ BinaryTreeNode* get_next_node(BinaryTreeNode* node){
 		BinaryTreeNode *child= node;
 		BinaryTreeNode *parent = node->parent;
 		while(parent != NULL && child == parent->right){
-			child = parent;
-			parent = parent->parent;
+		      child = parent;
+		      parent = parent->parent;
 		}
 		return parent;
 	}
