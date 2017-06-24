@@ -29,8 +29,8 @@ void increment_sort(int arr[], int len, int incr){
 
 void shell_sort(int arr[], int len){
 	int i;
-	int incr[] = {9, 5, 3, 1};
-	int nums = 4;
+	int incr[] = {5, 3, 1};
+	int nums = 3;
 
 	for(i=0; i<nums; i++){
 		increment_sort(arr, len, incr[i]);
