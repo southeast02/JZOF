@@ -19,9 +19,9 @@ int main()
 
 	LinkedList L;
 	init_linkedlist(&L);
-	insert_element(L, 10);
 	insert_element(L, 4);
 	insert_element(L, 4);
+	insert_element(L, 5);
 
 	printf("linked list is:\n");
 	show_linkedlist(L);
@@ -68,8 +68,16 @@ void delete_dulication(LinkedList L){
 			}
 		}
 		if(HASDUP){
+			HASDUP = 0;
 			pre->next = p->next;
-			p = p->next;
+			if(p->next != NULL){
+				p = p->next;
+			} else{
+				// when p is null then program can't be terminated.
+				// for example, list = [4, 5, 5]
+				break;
+			}
+
 		} else{
 			pre = p;
 			p = p->next;
@@ -80,7 +88,7 @@ void delete_dulication(LinkedList L){
 /*
  * output:
 linked list is:
-4	4	10	
+5	4	4	
 after deduplicate
-10
+5
  * */
