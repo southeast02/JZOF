@@ -93,3 +93,9 @@ int get_all_ages(int x, int y){
 
 	return sum_age;
 }
+
+/**
+ * input 3 3
+ * output:
+ * all rabbits ages = 2
+ * */
