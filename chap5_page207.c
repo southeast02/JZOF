@@ -82,21 +82,23 @@ int check_is_valid_x_length(int nums[], int N, int x){
 	return result;
 }
 
+
 int partition(int nums[], int start, int end){
 	int elem;
-
 	elem = nums[start];
 	while(start < end){
-		while(start < end && nums[end]>elem)
+		while(start < end && nums[end]>=elem)
 			end--;
 		nums[start]=nums[end];
-		start++;
-		while(start < end && nums[start]<elem)
+//		start++; // because after while loop there is a num[]=num[] anyway
+		// if s == e, then s++ is not necessary.
+		while(start < end && nums[start]<=elem)
 			start++;
 		nums[end]=nums[start];
-		end--;
+//		end--;
 	}
 	nums[start] = elem;
+
 	return start;
 }
 
