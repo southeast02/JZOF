@@ -15,7 +15,12 @@ int main()
 	int N = 5;
 	XNumber x;
 	int k = 2;
-
+	
+	if(k < 1 || k > N){
+		printf("%d is invalid", k);
+		return 1;
+	}
+	
 	x = get_k_min_numbers(arr, N, k);
 
 	for(int i=0; i<k; i++){
