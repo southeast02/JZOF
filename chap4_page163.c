@@ -48,15 +48,14 @@ void print_metrix(int** arr, int m, int n){
 			i++;
 			printf("%d, ", arr[i][j]);
 		}
-		n--;//last column has been printed.
 
-		while(j > round && i > round){
+		while(j > round && i > round){// i > round, because first line has been printed.
 			j--;
 			printf("%d, ", arr[i][j]);
 		}
 
 
-		while(i > round+1 && j < n){
+		while(i > round+1 && j < n-1){//j < n-1, because last column has been printed.
 			i--;
 			printf("%d, ", arr[i][j]);
 		}
@@ -64,6 +63,7 @@ void print_metrix(int** arr, int m, int n){
 		j++;
 		round++;
 		m--;
+		n--;
 	}
 }
 
@@ -90,8 +90,8 @@ void print_metrix(int** arr, int m, int n){
 4 1
 1 2 3 4
 1, 2, 3, 4,
- 
+
  1 1
 1
-1, 
+1,
  * */
