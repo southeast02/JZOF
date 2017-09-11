@@ -17,24 +17,6 @@ BinaryTree construct_core(char* start_preorder, char* end_preorder,
 void show_binary_tree(BinaryTree root);
 
 
-void image_tree(BinaryTree root){
-	// DLR to traverse the tree
-	if (root == NULL){
-		return;
-	}
-	if(root->left == NULL && root->right == NULL){
-		return;
-	}
-	// swap left and right tree
-	BinaryTreeNode *p = root->left;
-	root->left = root->right;
-	root->right = p;
-
-	image_tree(root->left);
-	image_tree(root->right);
-}
-
-
 int main(){
 
 	char preorder_values[] = {'7', '7', '7', '7', '7', '7'};
