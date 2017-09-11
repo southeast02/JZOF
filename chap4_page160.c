@@ -1,97 +1,138 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 
-void print_metrix(int** arr, int m, int n);
 
+typedef struct Node{
+	char value;
+	struct Node *left;
+	struct Node *right;
+	struct Node *parent;
+}*BinaryTree, BinaryTreeNode;
+
+
+int is_symmetric_tree(BinaryTree root1, BinaryTree root2);
+BinaryTree construct(char* preorder, char* inorder, int length);
+BinaryTree construct_core(char* start_preorder, char* end_preorder,
+		char* start_inorder, char* end_inorder);
+void show_binary_tree(BinaryTree root);
 
 
 int main(){
-	int m;
-	int n;
-	int **arr;
 
-	scanf("%d", &m);
-	scanf("%d", &n);
+	char preorder_values[] = {'7', '7', '7', '7', '7', '7'};
+	char inorder_values[] = {'7', '7', '7', '7', '7', '7'};
+	int result;
 
-//	int arr[m][n];
+	BinaryTree root = construct(preorder_values, inorder_values, 6);
 
-	arr = (int **)malloc(sizeof(int*)*m);
-	for(int i=0; i<m; i++){
-		arr[i] = (int *)malloc(sizeof(int)*n);
+	printf("Inorder show the binary tree:\n");
+	show_binary_tree(root);
+	puts("\n");
+
+
+	result = is_symmetric_tree(root->left, root->right);
+	if (result == 1){
+		puts("It's a symmetric tree");
+	}else {
+		puts("It's NOT a symmetric tree");
 	}
 
-	for(int i=0; i<m; i++){
-		for(int j = 0; j<n; j++)
-			scanf("%d", &arr[i][j]);
-	}
-
-
-	print_metrix(arr, m, n);
 }
 
 
-void print_metrix(int** arr, int m, int n){
-	int round = 0;
-	int i= 0;
-	int j = 0;
-
-	while(i < m && j < n){
-		while(j < n){
-			printf("%d, ", arr[i][j]);
-			j++;
-		}
-
-
-		if (j == n)
-			j--;
-		while(i < m-1){
-			i++;
-			printf("%d, ", arr[i][j]);
-		}
-
-		while(j > round && i > round){// i > round, because first line has been printed.
-			j--;
-			printf("%d, ", arr[i][j]);
-		}
-
-
-		while(i > round+1 && j < n-1){//j < n-1, because last column has been printed.
-			i--;
-			printf("%d, ", arr[i][j]);
-		}
-
-		j++;
-		round++;
-		m--;
-		n--;
+int is_symmetric_tree(BinaryTree root1, BinaryTree root2){
+	if (root1 == NULL && root2 == NULL)
+		return 1;
+	else if ((root1 != NULL && root2 != NULL) && (
+			root1->value == root2->value)){
+		return (is_symmetric_tree(root1->left, root2->right) &&
+				is_symmetric_tree(root1->right, root2->left));
 	}
+	return 0;
 }
 
+
+BinaryTree construct(char* preorder, char* inorder, int length){
+	if(preorder == NULL || inorder == NULL || length <= 0){
+		return NULL;
+	}
+	return construct_core(preorder, preorder+length-1,
+						 inorder, inorder+length-1);
+}
+
+BinaryTree construct_core(char* start_preorder, char* end_preorder,
+		char* start_inorder, char* end_inorder){
+	int root_value = start_preorder[0];
+	BinaryTreeNode *root = (BinaryTreeNode *)malloc(sizeof(BinaryTreeNode));
+	root->value = root_value;
+	root->left = NULL;
+	root->right = NULL;
+	root->parent = NULL;
+
+	if(start_preorder == end_preorder){
+		if(start_inorder == end_inorder &&
+		   *start_preorder == *start_inorder){
+		   return root;
+		}
+		else {
+			printf("invalid input\n");
+			return NULL;
+		}
+	}
+
+	char* root_inorder = start_inorder;
+	while(root_inorder <= end_inorder &&
+		  *root_inorder != root_value){
+		root_inorder++;
+	}
+	if(root_inorder == end_inorder &&
+       *root_inorder != root_value){
+		printf("invalid input\n");
+		return NULL;
+	}
+	int left_length = root_inorder - start_inorder;
+	char *left_preorderend = start_preorder + left_length;
+	if(left_length > 0){
+		root->left = construct_core(start_preorder+1, left_preorderend,
+				                    start_inorder, root_inorder-1);
+		root->left->parent = root;
+	}
+	if(left_length < end_preorder-start_preorder){
+		root->right = construct_core(left_preorderend+1, end_preorder,
+				                     root_inorder+1, end_inorder);
+		root->right->parent = root;
+	}
+	return root;
+}
+
+
+void show_binary_tree(BinaryTree root){
+	if (root == NULL){
+		return;
+	}
+	show_binary_tree(root->left);
+	printf("%c\t", root->value);
+	show_binary_tree(root->right);
+}
 
 /**
  *output
-4 4
-1 2 3 4
-5 6 7 8
-9 10 11 12
-13 14 15 16
-1, 2, 3, 4, 8, 12, 16, 15, 14, 13, 9, 5, 6, 7, 11, 10,
+
+Inorder show the binary tree:
+d	b	h	e	i	a	f	c	g
+
+It's NOT a symmetric tree
 
 
-2 3
-1 2 3
-4 5 6
-1, 2, 3, 6, 5, 4,
+Inorder show the binary tree:
+5	6	7	8	7	6	5
 
- 1 4
-1 2 3 4
-1, 2, 3, 4,
+It's a symmetric tree
 
-4 1
-1 2 3 4
-1, 2, 3, 4,
 
- 1 1
-1
-1,
+Inorder show the binary tree:
+7	7	7	7	7	7	
+
+It's NOT a symmetric tree
  * */
