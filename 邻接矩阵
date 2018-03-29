@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdio>
 #include <queue>
+#include <string.h>
 using namespace std;
 
 #define maxn 110        //最大顶点个数
@@ -51,27 +52,63 @@ void Dijkstra(int s)        //Dijkstra算法，传入源顶点
         }
     }
 }
+
+char map[35][5] = {
+    /*0 ,   1,   2,     3,    4,    5,   6,     7,    8,    9,    10,   11,     12*/
+    "S0", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12",
+
+    /*13,    14,    15,     16,   17,   18,    19,     20*/
+    "S20", "S21", "S22", "S23", "S24", "S25", "S26", "S27",
+
+    /*21,   22,     23,     24,   25,     26,   27*/
+    "S30", "s31", "S32", "S33", "S34", "S35", "S36",
+
+    /*28,    29,    30,   31,     32,   33,    34*/
+    "S40", "S41", "S42", "S43", "S44", "S45", "S46"
+};
+
+int find_vertex(char* str){
+    int vertex = -1;
+    for(int i=0; i< 35; i++) {
+        if (strcmp(map[i], str) == 0){
+            vertex = i;
+            break;
+        }
+    }
+    return vertex;
+}
+
 int main()
 {
-    int m, a, b, c, st, ed;
-    printf("请输入顶点数和边数：\n");
-    scanf("%d%d", &n, &m);
-    printf("请输入边以及权值（a, b, c)\n");
-    for(int i = 1; i <= n; i++)     //邻接矩阵存储前需要初始化
-        for(int j = i; j <= n; j++)
-            w[i][j] = w[j][i] = INF;
-    while(m--)
-    {
-        scanf("%d%d%d", &a, &b, &c);
-        if(w[a][b] > c)
-            w[a][b]= w[b][a] = c;
+    char dest[100];
+    int vertex=-1;
+    strcpy(dest, "S42");
+
+    vertex = find_vertex(dest);
+    if (vertex != -1){
+        printf("map[%d] = %s", vertex, dest);
+    } else {
+        printf("NO SUCH VERTEX");
     }
-    printf("请输入起点和终点：\n");
-    scanf("%d%d", &st, &ed);
-    Dijkstra(st);
-    if(d[ed].weight != INF)
-        printf("最短路径权值为：%d\n", d[ed].weight);
-    else
-        printf("不存在从顶点%d到顶点%d的最短路径。\n", st, ed);
+//    int m, a, b, c, st, ed;
+//    printf("请输入顶点数和边数：\n");
+//    scanf("%d%d", &n, &m);
+//    printf("请输入边以及权值（a, b, c)\n");
+//    for(int i = 1; i <= n; i++)     //邻接矩阵存储前需要初始化
+//        for(int j = i; j <= n; j++)
+//            w[i][j] = w[j][i] = INF;
+//    while(m--)
+//    {
+//        scanf("%d%d%d", &a, &b, &c);
+//        if(w[a][b] > c)
+//            w[a][b]= w[b][a] = c;
+//    }
+//    printf("请输入起点和终点：\n");
+//    scanf("%d%d", &st, &ed);
+//    Dijkstra(st);
+//    if(d[ed].weight != INF)
+//        printf("最短路径权值为：%d\n", d[ed].weight);
+//    else
+//        printf("不存在从顶点%d到顶点%d的最短路径。\n", st, ed);
     return 0;
 }
