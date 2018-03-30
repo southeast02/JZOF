@@ -1,10 +1,15 @@
+#include  <sstream>
+#include "list.h"
+#include "subwayLine.h"
+#include "subwayMacro.h"
+
 #include <iostream>
 #include <cstdio>
 #include <queue>
 #include <string.h>
 using namespace std;
 
-#define maxn 110        //最大顶点个数
+#define maxn 40        //最大顶点个数
 #define INF 0xffffff    //权值上限
 int w[maxn][maxn];      //邻接矩阵，存储权值
 int n;                  //顶点个数
@@ -17,13 +22,14 @@ struct node             //顶点节点，保存id和到源顶点的估算距离�
         return a.weight > b.weight;
     }
 };
+
 priority_queue<node> q;     //优先队列，最小堆，实现Dijkstra的重要数据结构，用stl实现
 int parent[maxn];           //每个顶点的父亲节点，可以用于还原最短路径树
 bool visited[maxn];         //用于判断顶点是否已经在最短路径树中，或者说是否已找到最短路径
-node d[maxn];               //源点到每个顶点估算距离，最后结果为源点到所有顶点的最短路。
+struct node d[maxn];               //源点到每个顶点估算距离，最后结果为源点到所有顶点的最短路。
 void Dijkstra(int s)        //Dijkstra算法，传入源顶点
 {
-    for(int i = 1; i <= n; i++)     //初始化
+    for(int i = 0; i < n; i++)     //初始化
     {
         d[i].id = i;
         d[i].weight = INF;          //估算距离置INF
@@ -41,7 +47,7 @@ void Dijkstra(int s)        //Dijkstra算法，传入源顶点
             continue;
         visited[u] = true;
         //松弛操作
-        for(int v = 1; v <= n; v++) //找所有与他相邻的顶点，进行松弛操作，更新估算距离，压入队列。
+        for(int v = 0; v < n; v++) //找所有与他相邻的顶点，进行松弛操作，更新估算距离，压入队列。
         {
             if(v != u && !visited[v] && d[v].weight > d[u].weight+w[u][v])
             {
@@ -53,23 +59,23 @@ void Dijkstra(int s)        //Dijkstra算法，传入源顶点
     }
 }
 
-char map[35][5] = {
-    /*0 ,   1,   2,     3,    4,    5,   6,     7,    8,    9,    10,   11,     12*/
-    "S0", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12",
+char map[38][5] = {
+    /*0 ,   1,   2,     3,    4,    5,   6,     7,    8,    9,    10,   11,     12,    13,     14,   15,   16 */
+    "S0", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11", "S12", "S13", "S14", "S15", "S16", 
 
-    /*13,    14,    15,     16,   17,   18,    19,     20*/
+    /*17,   18,    19,     20,    21,    22,    23,    24*/
     "S20", "S21", "S22", "S23", "S24", "S25", "S26", "S27",
 
-    /*21,   22,     23,     24,   25,     26,   27*/
+    /*25,   26     27,     28,   29,     30,   31*/
     "S30", "s31", "S32", "S33", "S34", "S35", "S36",
 
-    /*28,    29,    30,   31,     32,   33,    34*/
-    "S40", "S41", "S42", "S43", "S44", "S45", "S46"
+    /*32,    33,    34,   35,     36,   37 */
+    "S40", "S41", "S42", "S43", "S44", "S45",
 };
 
 int find_vertex(char* str){
     int vertex = -1;
-    for(int i=0; i< 35; i++) {
+    for(int i=0; i< 38; i++) {
         if (strcmp(map[i], str) == 0){
             vertex = i;
             break;
@@ -78,37 +84,90 @@ int find_vertex(char* str){
     return vertex;
 }
 
-int main()
+void init_subway_lines(int src)
 {
-    char dest[100];
-    int vertex=-1;
-    strcpy(dest, "S42");
+    int m, a, b, c;
+    //printf("请输入顶点数和边数：\n");
+    //scanf("%d%d", &n, &m);
+	n = 38;
+	m = 38; 
 
-    vertex = find_vertex(dest);
-    if (vertex != -1){
-        printf("map[%d] = %s", vertex, dest);
-    } else {
-        printf("NO SUCH VERTEX");
-    }
-//    int m, a, b, c, st, ed;
-//    printf("请输入顶点数和边数：\n");
-//    scanf("%d%d", &n, &m);
-//    printf("请输入边以及权值（a, b, c)\n");
-//    for(int i = 1; i <= n; i++)     //邻接矩阵存储前需要初始化
-//        for(int j = i; j <= n; j++)
-//            w[i][j] = w[j][i] = INF;
-//    while(m--)
-//    {
-//        scanf("%d%d%d", &a, &b, &c);
-//        if(w[a][b] > c)
-//            w[a][b]= w[b][a] = c;
-//    }
-//    printf("请输入起点和终点：\n");
-//    scanf("%d%d", &st, &ed);
-//    Dijkstra(st);
-//    if(d[ed].weight != INF)
-//        printf("最短路径权值为：%d\n", d[ed].weight);
-//    else
-//        printf("不存在从顶点%d到顶点%d的最短路径。\n", st, ed);
-    return 0;
+	//邻接矩阵存储前需要初始化
+    for(int i = 0; i < n; i++)     
+        for(int j = i; j <= n; j++)
+            w[i][j] = w[j][i] = INF;
+    //while(m--)
+    //{
+    //    scanf("%d%d%d", &a, &b, &c);
+    //    if(w[a][b] > c) 
+    //        w[a][b]= w[b][a] = c;
+    //}
+	//
+	a = find_vertex("S0"); b = find_vertex("S1"); c = 800; if(w[a][b] > c) w[a][b]= w[b][a] = c; // 1
+	a = find_vertex("S1"); b = find_vertex("S2"); c = 2168; if(w[a][b] > c) w[a][b]= w[b][a] = c;// 2
+	a = find_vertex("S2"); b = find_vertex("S3"); c = 2098; if(w[a][b] > c) w[a][b]= w[b][a] = c;// 3
+	a = find_vertex("S3"); b = find_vertex("S4"); c = 2165;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 4
+	a = find_vertex("S4"); b = find_vertex("S5"); c = 1500;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 5
+	a = find_vertex("S5"); b = find_vertex("S6"); c = 1345;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 6
+	a = find_vertex("S6"); b = find_vertex("S7"); c = 1567;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 7
+	a = find_vertex("S7"); b = find_vertex("S8"); c = 1897;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 8
+	a = find_vertex("S8"); b = find_vertex("S9"); c = 1000;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 9
+	a = find_vertex("S9"); b = find_vertex("S10"); c = 900;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 10
+	a = find_vertex("S10"); b = find_vertex("S11"); c = 1168;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 11
+	a = find_vertex("S11"); b = find_vertex("S12"); c = 2000;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 12
+	a = find_vertex("S12"); b = find_vertex("S13"); c = 1600;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 13
+	a = find_vertex("S13"); b = find_vertex("S14"); c = 1485;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 14
+	a = find_vertex("S14"); b = find_vertex("S15"); c = 1600;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 15
+	a = find_vertex("S15"); b = find_vertex("S16"); c = 1800;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 16
+
+	a = find_vertex("S20"); b = find_vertex("S21"); c = 900; if(w[a][b] > c) w[a][b]= w[b][a] = c;// 17
+	a = find_vertex("S21"); b = find_vertex("S22"); c = 1168; if(w[a][b] > c) w[a][b]= w[b][a] = c;// 18
+	a = find_vertex("S22"); b = find_vertex("S5"); c = 2198; if(w[a][b] > c) w[a][b]= w[b][a] = c;// 19
+	a = find_vertex("S5"); b = find_vertex("S23"); c = 2000;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 20
+	a = find_vertex("S23"); b = find_vertex("S24"); c = 1600;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 21
+	a = find_vertex("S24"); b = find_vertex("S25"); c = 1485;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 22
+	a = find_vertex("S25"); b = find_vertex("S26"); c = 1600;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 23
+	a = find_vertex("S26"); b = find_vertex("S27"); c = 1888;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 24
+
+	a = find_vertex("S30"); b = find_vertex("S31"); c = 1100; if(w[a][b] > c) w[a][b]= w[b][a] = c;// 25
+	a = find_vertex("S31"); b = find_vertex("S32"); c = 1238;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 26
+	a = find_vertex("S32"); b = find_vertex("S33"); c = 1998; if(w[a][b] > c) w[a][b]= w[b][a] = c;// 27
+	a = find_vertex("S33"); b = find_vertex("S34"); c = 1998;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 28
+	a = find_vertex("S34"); b = find_vertex("S24"); c = 1700;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 29
+	a = find_vertex("S24"); b = find_vertex("S35"); c = 1585;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 30
+	a = find_vertex("S35"); b = find_vertex("S36"); c = 1405;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 31
+
+	a = find_vertex("S40"); b = find_vertex("S41"); c = 1110; if(w[a][b] > c) w[a][b]= w[b][a] = c;// 32
+	a = find_vertex("S41"); b = find_vertex("S42"); c = 1338;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 33
+	a = find_vertex("S42"); b = find_vertex("S2"); c = 1568; if(w[a][b] > c) w[a][b]= w[b][a] = c;// 34
+	a = find_vertex("S2"); b = find_vertex("S32"); c = 1450;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 35
+	a = find_vertex("S32"); b = find_vertex("S43"); c = 1680; if(w[a][b] > c) w[a][b]= w[b][a] = c;// 36
+	a = find_vertex("S43"); b = find_vertex("S44"); c = 1345;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 37
+	a = find_vertex("S44"); b = find_vertex("S45"); c = 1555;if(w[a][b] > c)  w[a][b]= w[b][a] = c;// 38
+
+	Dijkstra(src);
+
+}
+
+
+int compute_distance(char* src, char * dest) {
+	int a = find_vertex(src);
+	int b = find_vertex(dest);
+
+	//计算从a出发，到其他所有路径的最短路径
+	init_subway_lines(a);
+
+	int ret = INF;
+	
+	if(d[b].weight != INF) {
+			
+		ret = d[b].weight;
+		for(int j = 0; j < maxn; j++){
+			d[j].weight = INF;
+			visited[j] = false;
+		}
+	}
+
+	
+	return ret;
 }
